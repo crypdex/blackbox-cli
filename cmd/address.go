@@ -26,13 +26,13 @@ import (
 // addressCmd represents the address command
 var addressCmd = &cobra.Command{
 	Use:   "address",
-	Short: "A brief description of your command",
+	Short: "Manage addresses",
 	Long:  ``,
 }
 
 var addressListCmd = &cobra.Command{
 	Use:   "ls",
-	Short: "A brief description of your command",
+	Short: "List known addresses",
 	Long:  ``,
 	PreRun: func(cmd *cobra.Command, args []string) {
 		validateChain()

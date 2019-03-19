@@ -17,58 +17,44 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/manifoldco/promptui"
-	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
 )
 
-// loginCmd represents the login command
-var loginCmd = &cobra.Command{
-	Use:   "login",
-	Short: "Login and unlock a Blackbox",
+// masternodeCmd represents the masternode command
+var masternodeCmd = &cobra.Command{
+	Use:   "masternode",
+	Short: "Manage masternodes",
 	Long:  ``,
+}
+
+var masternodeListCmd = &cobra.Command{
+	Use:   "ls",
+	Short: "List registered masternodes",
+	Long:  ``,
+	PreRun: func(cmd *cobra.Command, args []string) {
+		validateChain()
+	},
 	Run: func(cmd *cobra.Command, args []string) {
-		var err error
-		defer handle(&err)
-
-		prompt := promptui.Prompt{
-			Label: "password",
-			Mask:  '*',
-			Validate: func(input string) error {
-				if len(input) == 0 {
-					return errors.New("Password cannot be blank")
-				}
-				return nil
-			},
-		}
-
-		result, err := prompt.Run()
-
+		response, err := blackboxClient.MasternodeList(chain)
 		if err != nil {
-			fmt.Printf("Prompt failed %v\n", err)
-			return
+			fatal(err)
 		}
-
-		save := cmd.Flag("save").Value.String() == "true"
-
-		response, err := blackboxClient.Login(result, save)
-		check(err)
 
 		fmt.Println(response)
-
 	},
 }
 
 func init() {
-	rootCmd.AddCommand(loginCmd)
+	rootCmd.AddCommand(masternodeCmd)
+	masternodeCmd.AddCommand(masternodeListCmd)
 
 	// Here you will define your flags and configuration settings.
 
 	// Cobra supports Persistent Flags which will work for this command
 	// and all subcommands, e.g.:
-	// loginCmd.PersistentFlags().String("foo", "", "A help for foo")
+	// masternodeCmd.PersistentFlags().String("foo", "", "A help for foo")
 
 	// Cobra supports local flags which will only run when this command
 	// is called directly, e.g.:
-	loginCmd.Flags().BoolP("save", "s", false, "[DEV ONLY] Save the password on the device.")
+	// masternodeCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }

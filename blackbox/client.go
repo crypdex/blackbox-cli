@@ -115,6 +115,16 @@ func (c *Client) AddressRecreate(chain string, count int) (interface{}, error) {
 	return response, nil
 }
 
+func (c *Client) MasternodeList(chain string) (interface{}, error) {
+	response, err := c.client.R().Get(fmt.Sprintf("/v1/%s/masternodes", chain))
+
+	if err := checkResponse(response, err); err != nil {
+		return nil, err
+	}
+
+	return response, nil
+}
+
 func checkResponse(response *resty.Response, err error) error {
 	if err != nil {
 		return err
