@@ -54,7 +54,9 @@ to quickly create a Cobra application.`,
 			return
 		}
 
-		response, err := blackboxClient.Login(result)
+		save := cmd.Flag("save").Value.String() == "true"
+
+		response, err := blackboxClient.Login(result, save)
 		check(err)
 
 		fmt.Println(response)
@@ -73,5 +75,5 @@ func init() {
 
 	// Cobra supports local flags which will only run when this command
 	// is called directly, e.g.:
-	// loginCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	loginCmd.Flags().BoolP("save", "s", false, "[DEV ONLY] Save the password on the device.")
 }

@@ -17,7 +17,7 @@ func handle(err *error) {
 
 func fatal(err error) {
 	fmt.Println(aurora.Red(err.Error()))
-	os.Exit(1)
+	os.Exit(0)
 }
 
 func check(err error) {
@@ -25,8 +25,3 @@ func check(err error) {
 		panic(err)
 	}
 }
-
-// func handle(err error) {
-// 	aurora.Red(err.Error())
-// 	os.Exit(1)
-// }

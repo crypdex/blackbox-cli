@@ -13,12 +13,13 @@ func init() {
 // logoutCmd represents the logout command
 var logoutCmd = &cobra.Command{
 	Use:   "logout",
-	Short: "Logout of the node and lock the wallet",
+	Short: "Logout of the node, lock the wallet, remove any stored password",
 	Long:  ``,
 	Run: func(cmd *cobra.Command, args []string) {
-		var err error
-		defer handle(&err)
-		check(blackboxClient.Logout())
+		if err := blackboxClient.Logout(); err != nil {
+			fatal(err)
+		}
+
 		fmt.Println("successfully logged out")
 	},
 }

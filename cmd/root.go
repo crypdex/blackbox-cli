@@ -26,7 +26,7 @@ import (
 
 var cfgFile string
 var chain string
-var blackboxURL string
+var host string
 var blackboxClient *blackbox.Client
 
 // rootCmd represents the base command when called without any subcommands
@@ -56,14 +56,17 @@ func Execute() {
 func init() {
 	cobra.OnInitialize(initConfig)
 	cobra.OnInitialize(initClient)
+	cobra.OnInitialize(initChain)
+
 	// Here you will define your flags and configuration settings.
 	// Cobra supports persistent flags, which, if defined here,
 	// will be global for your application.
-	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.blackbox-cli.yaml)")
+	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.blackbox.yaml)")
 
-	rootCmd.PersistentFlags().StringVarP(&blackboxURL, "node", "n", "", "blackbox node address")
+	rootCmd.PersistentFlags().StringVarP(&host, "node", "n", "", "blackbox node address")
 
 	rootCmd.PersistentFlags().StringVarP(&chain, "chain", "c", "", "selected chain")
+
 }
 
 // initConfig reads in config file and ENV variables if set.
@@ -81,7 +84,7 @@ func initConfig() {
 
 		// Search config in home directory with name ".blackbox-cli" (without extension).
 		viper.AddConfigPath(home)
-		viper.SetConfigName(".blackbox-cli")
+		viper.SetConfigName(".blackbox")
 	}
 
 	viper.AutomaticEnv() // read in environment variables that match
@@ -92,13 +95,21 @@ func initConfig() {
 	}
 }
 
+func initChain() {
+	if chain == "" {
+		chain = viper.GetString("chain")
+	}
+}
+
 func initClient() {
 	var err error
-	defer handle(&err)
 
-	config := viper.New()
-	config.Set("url", blackboxURL)
+	if host == "" {
+		host = viper.GetString("host")
+	}
 
-	blackboxClient, err = blackbox.NewClient(config)
-	check(err)
+	blackboxClient, err = blackbox.NewClient(host)
+	if err != nil {
+		fatal(err)
+	}
 }

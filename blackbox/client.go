@@ -6,8 +6,7 @@ import (
 	"net/url"
 
 	"github.com/pkg/errors"
-	"github.com/spf13/viper"
-	"gopkg.in/resty.v1"
+	resty "gopkg.in/resty.v1"
 )
 
 type Client struct {
@@ -15,14 +14,13 @@ type Client struct {
 }
 
 // NewClient ...
-func NewClient(config *viper.Viper) (*Client, error) {
-	hostURL := config.GetString("url")
+func NewClient(host string) (*Client, error) {
 
-	if hostURL == "" {
-		return nil, errors.New("missing address")
+	if host == "" {
+		return nil, errors.New("missing blackbox host")
 	}
 
-	host, port, _ := net.SplitHostPort(hostURL)
+	host, port, _ := net.SplitHostPort(host)
 
 	u := url.URL{Scheme: "http", Host: fmt.Sprintf("%s:%s", host, port)}
 
@@ -51,10 +49,11 @@ func (c *Client) Init(request InitRequest) (*InitResponse, error) {
 	return result, nil
 }
 
-func (c *Client) Login(password string) (interface{}, error) {
+func (c *Client) Login(password string, save bool) (interface{}, error) {
 	response, err := c.client.R().
-		SetBody(map[string]string{
+		SetBody(map[string]interface{}{
 			"password": password,
+			"save":     save,
 		}).
 		Post("/login")
 

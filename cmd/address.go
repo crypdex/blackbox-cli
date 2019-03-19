@@ -104,6 +104,6 @@ func init() {
 
 func validateChain() {
 	if chain == "" {
-		fatal(errors.New("chain is required: use -c flag"))
+		fatal(errors.New("chain is required: use -c flag or add to ~/.blackbox.yaml"))
 	}
 }
