@@ -83,8 +83,8 @@ func initConfig() {
 		}
 
 		// Search config in home directory with name ".blackbox-cli" (without extension).
-		viper.AddConfigPath(home)
-		viper.SetConfigName(".blackbox")
+		viper.AddConfigPath(home + "/.crypdex")
+		viper.SetConfigName("blackbox")
 	}
 
 	viper.AutomaticEnv() // read in environment variables that match
@@ -108,7 +108,7 @@ func initClient() {
 		host = viper.GetString("host")
 	}
 
-	blackboxClient, err = blackbox.NewClient(host)
+	blackboxClient, err = blackbox.NewClient(host, viper.GetString("token"))
 	if err != nil {
 		fatal(err)
 	}
