@@ -16,11 +16,21 @@ package cmd
 
 import (
 	"fmt"
+	"io/ioutil"
+	"os"
 
 	"github.com/manifoldco/promptui"
+	homedir "github.com/mitchellh/go-homedir"
 	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
+	yaml "gopkg.in/yaml.v2"
 )
+
+type conf struct {
+	Token string `yaml:"token"`
+	Host  string `yaml:"host"`
+	Chain string `yaml:"chain"`
+}
 
 // loginCmd represents the login command
 var loginCmd = &cobra.Command{
@@ -54,7 +64,26 @@ var loginCmd = &cobra.Command{
 		response, err := blackboxClient.Login(result, save)
 		check(err)
 
-		fmt.Println(response)
+		fmt.Println(response.JWT)
+		path, err := homedir.Dir()
+		check(err)
+
+		c := new(conf)
+
+		yamlPath := path + "/.crypdex/blackbox.yaml"
+		if _, err := os.Stat(yamlPath); !os.IsNotExist(err) {
+			yamlFile, err := ioutil.ReadFile(yamlPath)
+			check(err)
+			err = yaml.Unmarshal(yamlFile, c)
+			check(err)
+		}
+
+		c.Token = response.JWT
+		out, err := yaml.Marshal(c)
+		check(err)
+
+		err = ioutil.WriteFile(yamlPath, out, 0644)
+		check(err)
 
 	},
 }
