@@ -32,16 +32,8 @@ var blackboxClient *blackbox.Client
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
 	Use:   "blackbox",
-	Short: "A brief description of your application",
-	Long: `A longer description that spans multiple lines and likely contains
-examples and usage of using your application. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
-	// Uncomment the following line if your bare application
-	// has an action associated with it:
-	//	Run: func(cmd *cobra.Command, args []string) { },
+	Short: "A command line utility for interfacing with devices running the BlackboxOS",
+	Long:  ``,
 }
 
 // Execute adds all child commands to the root command and sets flags appropriately.
@@ -66,7 +58,6 @@ func init() {
 	rootCmd.PersistentFlags().StringVarP(&host, "node", "n", "", "blackbox node address")
 
 	rootCmd.PersistentFlags().StringVarP(&chain, "chain", "c", "", "selected chain")
-
 }
 
 // initConfig reads in config file and ENV variables if set.
