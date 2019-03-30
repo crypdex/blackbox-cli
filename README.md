@@ -1,4 +1,4 @@
-<img src="https://raw.githubusercontent.com/crypdex/blackbox/master/resources/images/logo.png?token=AAApwfyzFtNiStgrv12MXRoXWI0ayTtcks5ciTVawA%3D%3D" width=250>
+<img src="https://raw.githubusercontent.com/crypdex/blackbox/master/resources/images/logo.png" width=250>
 
 # Blackbox CLI
 
