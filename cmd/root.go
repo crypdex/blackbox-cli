@@ -47,7 +47,7 @@ func Execute() {
 
 func init() {
 	cobra.OnInitialize(initConfig)
-	cobra.OnInitialize(initClient)
+	// cobra.OnInitialize(initClient)
 	cobra.OnInitialize(initChain)
 
 	// Here you will define your flags and configuration settings.
