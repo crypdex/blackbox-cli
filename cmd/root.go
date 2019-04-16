@@ -45,9 +45,11 @@ func Execute() {
 	}
 }
 
+var debug bool
+
 func init() {
 	cobra.OnInitialize(initConfig)
-	// cobra.OnInitialize(initClient)
+	cobra.OnInitialize(initClient)
 	cobra.OnInitialize(initChain)
 
 	// Here you will define your flags and configuration settings.
@@ -55,9 +57,10 @@ func init() {
 	// will be global for your application.
 	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.blackbox.yaml)")
 
-	rootCmd.PersistentFlags().StringVarP(&host, "node", "n", "", "blackbox node address")
+	rootCmd.PersistentFlags().StringVarP(&host, "address", "a", "", "blackbox node address")
 
 	rootCmd.PersistentFlags().StringVarP(&chain, "chain", "c", "", "selected chain")
+	rootCmd.PersistentFlags().BoolVarP(&debug, "debug", "d", false, "Debug")
 }
 
 // initConfig reads in config file and ENV variables if set.
@@ -84,6 +87,7 @@ func initConfig() {
 	if err := viper.ReadInConfig(); err == nil {
 		fmt.Println("Using config file:", viper.ConfigFileUsed())
 	}
+
 }
 
 func initChain() {
@@ -99,7 +103,7 @@ func initClient() {
 		host = viper.GetString("host")
 	}
 
-	blackboxClient, err = blackbox.NewClient(host, viper.GetString("token"))
+	blackboxClient, err = blackbox.NewClient(host, viper.GetString("token"), debug)
 	if err != nil {
 		fatal(err)
 	}

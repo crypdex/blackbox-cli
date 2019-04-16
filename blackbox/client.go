@@ -2,34 +2,41 @@ package blackbox
 
 import (
 	"fmt"
-	"net/url"
 
-	"github.com/pkg/errors"
 	resty "gopkg.in/resty.v1"
 )
 
 type Client struct {
 	client *resty.Client
+	debug  bool
 }
 
 // NewClient ...
-func NewClient(host string, token string) (*Client, error) {
+func NewClient(url string, token string, debug bool) (*Client, error) {
 
-	if host == "" {
-		return nil, errors.New("missing blackbox host")
+	if url == "" {
+		fmt.Println("Defaulting to crypdex.local")
+		url = "http://crypdex.local"
 	}
-
-	u := url.URL{Scheme: "http", Host: host}
 
 	errorResponse := new(ErrorResponse)
 	client := resty.
-		SetHostURL(u.String()).
+		SetDebug(debug).
+		SetHostURL(url).
 		SetHeader("Accept", "application/json").
 		SetAuthToken(token).
 		SetHeader("User-Agent", "blackbox-cli").
-		SetError(errorResponse)
+		SetError(errorResponse).
+		OnBeforeRequest(func(c *resty.Client, req *resty.Request) error {
+			// Now you have access to Client and current Request object
+			// manipulate it as per your need
+			if debug {
+				// fmt.Printf("%s %s%s\n", req.Method, c.HostURL, req.URL)
+			}
+			return nil // if its success otherwise return error
+		})
 
-	return &Client{client: client}, nil
+	return &Client{client: client, debug: debug}, nil
 }
 
 func (c *Client) Init(request InitRequest) (*InitResponse, error) {

@@ -75,4 +75,5 @@ var force bool
 func init() {
 	rootCmd.AddCommand(initCmd)
 	initCmd.Flags().BoolVarP(&force, "force", "f", false, "Force re-initialization")
+
 }

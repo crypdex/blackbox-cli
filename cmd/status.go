@@ -17,6 +17,8 @@ package cmd
 import (
 	"fmt"
 
+	"github.com/pkg/errors"
+
 	"github.com/spf13/cobra"
 )
 
@@ -30,6 +32,10 @@ var statusCmd = &cobra.Command{
 		defer handle(&err)
 
 		response, err := blackboxClient.Status()
+		// TODO: This should be handled at the API layer
+		if err != nil && err.Error() == "-32601: Method not found (disabled)" {
+			check(errors.New("Loading the blockchain index. This could take some time."))
+		}
 		check(err)
 
 		fmt.Println(response)
