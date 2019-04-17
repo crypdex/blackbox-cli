@@ -83,16 +83,6 @@ func (c *Client) Logout() error {
 	return checkResponse(response, err)
 }
 
-func (c *Client) Status() (interface{}, error) {
-	response, err := c.client.R().Get("/status")
-
-	if err := checkResponse(response, err); err != nil {
-		return nil, err
-	}
-
-	return response, nil
-}
-
 func (c *Client) SystemStatus() (interface{}, error) {
 	response, err := c.client.R().Get("/system/status")
 

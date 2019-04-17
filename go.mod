@@ -6,8 +6,11 @@ require (
 	github.com/inconshreveable/mousetrap v1.0.0 // indirect
 	github.com/logrusorgru/aurora v0.0.0-20181002194514-a7b3b318ed4e
 	github.com/manifoldco/promptui v0.3.2
+	github.com/mattn/go-runewidth v0.0.4 // indirect
 	github.com/mitchellh/go-homedir v1.1.0
+	github.com/mitchellh/mapstructure v1.1.2
 	github.com/nicksnyder/go-i18n v1.10.0 // indirect
+	github.com/olekukonko/tablewriter v0.0.1
 	github.com/pkg/errors v0.8.1
 	github.com/spf13/cobra v0.0.3
 	github.com/spf13/viper v1.3.2

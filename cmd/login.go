@@ -1,29 +1,17 @@
-// Copyright © 2019 NAME HERE <EMAIL ADDRESS>
-//
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-//     http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-
 package cmd
 
 import (
 	"fmt"
 	"io/ioutil"
 	"os"
+	"path/filepath"
 
+	"github.com/logrusorgru/aurora"
 	"github.com/manifoldco/promptui"
-	homedir "github.com/mitchellh/go-homedir"
+	"github.com/mitchellh/go-homedir"
 	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
-	yaml "gopkg.in/yaml.v2"
+	"gopkg.in/yaml.v2"
 )
 
 type conf struct {
@@ -64,27 +52,47 @@ var loginCmd = &cobra.Command{
 		response, err := blackboxClient.Login(result, save)
 		check(err)
 
-		fmt.Println(response.JWT)
+		// fmt.Println(response.JWT)
 		path, err := homedir.Dir()
 		check(err)
 
+		// Does the CLI directory exist?
+		configpath := filepath.Join(path, ".crypdex")
+		if _, err := os.Stat(configpath); os.IsNotExist(err) {
+			fmt.Println(".crypdex does not exist. Creating ...")
+
+			os.MkdirAll(configpath, os.ModePerm)
+		}
+
+		// Does a stored config file exist?
+		configfile := filepath.Join(configpath, "blackbox.yml")
+		if _, err := os.Stat(configfile); os.IsNotExist(err) {
+			fmt.Println(".crypdex/blackbox.yml does not exist. Creating ...")
+
+			emptyFile, err := os.Create(configfile)
+			check(err)
+
+			check(emptyFile.Close())
+		}
+
 		c := new(conf)
 
-		yamlPath := path + "/.crypdex/blackbox.yaml"
-		if _, err := os.Stat(yamlPath); !os.IsNotExist(err) {
-			yamlFile, err := ioutil.ReadFile(yamlPath)
-			check(err)
-			err = yaml.Unmarshal(yamlFile, c)
-			check(err)
-		}
+		// if _, err := os.Stat(yamlPath); !os.IsNotExist(err) {
+		yamlFile, err := ioutil.ReadFile(configfile)
+		check(err)
+		err = yaml.Unmarshal(yamlFile, c)
+		check(err)
 
 		c.Token = response.JWT
 		out, err := yaml.Marshal(c)
 		check(err)
 
-		err = ioutil.WriteFile(yamlPath, out, 0644)
+		err = ioutil.WriteFile(configfile, out, 0644)
 		check(err)
 
+		fmt.Println(aurora.Green("Success."))
+		fmt.Println("A token has been saved to ~/.crypdex/blackbox.yml")
+		fmt.Println("You may now use privileged commands.")
 	},
 }
 
