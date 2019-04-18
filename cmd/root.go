@@ -16,7 +16,9 @@ package cmd
 
 import (
 	"fmt"
+	"net"
 	"os"
+	"strings"
 
 	"github.com/crypdex/blackbox-cli/blackbox"
 	homedir "github.com/mitchellh/go-homedir"
@@ -98,13 +100,33 @@ func initChain() {
 
 func initClient() {
 	var err error
-
+	// Has the host been set with the global flag?
+	// Is the host saved in a config?
 	if host == "" {
 		host = viper.GetString("host")
 	}
+
+	if host == "" {
+		fmt.Println("Defaulting to crypdex.local")
+		host = "crypdex.local"
+	}
+
+	addrs, err := net.LookupIP("crypdex.local")
+	if err != nil {
+		fatal(err)
+	}
+	for _, addr := range addrs {
+		host = "http://" + addr.To4().String()
+	}
+
+	fmt.Println("Using host", host)
 
 	blackboxClient, err = blackbox.NewClient(host, viper.GetString("token"), debug)
 	if err != nil {
 		fatal(err)
 	}
+}
+
+func IsIPv4(address string) bool {
+	return strings.Count(address, ":") < 2
 }

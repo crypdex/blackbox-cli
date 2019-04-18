@@ -3,6 +3,7 @@ package blackbox
 import (
 	"fmt"
 
+	"github.com/logrusorgru/aurora"
 	resty "gopkg.in/resty.v1"
 )
 
@@ -31,7 +32,7 @@ func NewClient(url string, token string, debug bool) (*Client, error) {
 			// Now you have access to Client and current Request object
 			// manipulate it as per your need
 			if debug {
-				// fmt.Printf("%s %s%s\n", req.Method, c.HostURL, req.URL)
+				fmt.Println(aurora.Cyan(fmt.Sprintf("%s %s%s\n", req.Method, c.HostURL, req.URL)))
 			}
 			return nil // if its success otherwise return error
 		})

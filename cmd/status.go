@@ -50,7 +50,7 @@ var statusCmd = &cobra.Command{
 func printStatus(result *blackbox.Status) {
 	var chains []string
 	locked := aurora.Green("UNLOCKED").String()
-	initialized := aurora.Red("NOT INITIALIZED").String()
+	initialized := aurora.Red("UNINITIALIZED").String()
 
 	if result.Locked {
 		locked = aurora.Red("LOCKED").String()

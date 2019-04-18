@@ -1,5 +1,8 @@
 TAG?=
 
+install:
+	go install .
+
 release: require-tag
 	git tag ${TAG}
 	git push origin ${TAG}
