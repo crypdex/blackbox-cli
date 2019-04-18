@@ -6,8 +6,7 @@ A command line utility for interfacing with the devices running the **[BlackboxO
 
 ## Installation
 
-Download the most recent [release](https://github.com/crypdex/blackbox-cli/releases) for your platform. If you are running Linux, you may install via `apt`.
-
+Download the most recent [release](https://github.com/crypdex/blackbox-cli/releases) for your platform.
 ## Installation from `apt`
 
 Add the following to `/etc/apt/sources.list`
