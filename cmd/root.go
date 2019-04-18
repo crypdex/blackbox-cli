@@ -20,6 +20,7 @@ import (
 	"os"
 	"strings"
 
+	"github.com/goware/urlx"
 	. "github.com/logrusorgru/aurora"
 
 	"github.com/crypdex/blackbox-cli/blackbox"
@@ -113,13 +114,15 @@ func initClient() {
 		host = "crypdex.local"
 	}
 
+	u, err := urlx.Parse(host)
+	host, port, _ := urlx.SplitHostPort(u)
 	addrs, err := net.LookupHost(host)
 	if err != nil {
 		fatal(err)
 	}
 	for _, addr := range addrs {
 		if IsIPv4(addr) {
-			host = "http://" + addr
+			host = u.Scheme + "://" + addr + ":" + port
 		}
 	}
 
@@ -136,9 +139,15 @@ func IsIPv4(address string) bool {
 }
 
 func log(level string, msg string) {
+
 	if level == "debug" && debug {
 		fmt.Println("[debug]", msg)
 	} else if level == "info" {
 		fmt.Println(Green(msg))
+	} else if level == "warn" {
+		fmt.Println(Cyan(msg))
+	} else {
+		fmt.Println(msg)
 	}
+
 }

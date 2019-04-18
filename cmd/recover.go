@@ -14,7 +14,7 @@ func init() {
 
 var recoverInstructions1 = `
 To recover your wallet, enter your mnemonic phrase and password.
-Be aware that the mnemonic is not checked for validity
+Be aware that the mnemonic is not currenly checked for validity.
 `
 
 // initCmd represents the init command
@@ -33,10 +33,10 @@ var recoverCmd = &cobra.Command{
 		log("info", recoverInstructions1)
 
 		prompt = promptui.Prompt{
-			Label: "Mnemonic",
+			Label: "Mnemonic ",
 			Validate: func(input string) error {
 				if len(input) == 0 {
-					return errors.New("Mnemonic cannot be blank")
+					return errors.New("mnemonic cannot be blank")
 				}
 				return nil
 			}}
@@ -44,11 +44,17 @@ var recoverCmd = &cobra.Command{
 		check(err)
 
 		prompt = promptui.Prompt{
-			Label: "Password",
+			Label: "Mnemonic Password (optional) ",
 			Mask:  '*',
+		}
+		mnemonicPassword, err := prompt.Run()
+		check(err)
+
+		prompt = promptui.Prompt{
+			Label: "Current Password ",
 			Validate: func(input string) error {
 				if len(input) == 0 {
-					return errors.New("Password cannot be blank")
+					return errors.New("password cannot be blank")
 				}
 				return nil
 			}}
@@ -57,9 +63,10 @@ var recoverCmd = &cobra.Command{
 
 		_, err = blackboxClient.Init(blackbox.InitRequest{
 			// Email:    email,
-			Password: password,
-			Mnemonic: mnemonic,
-			Force:    true,
+			Password:         password,
+			MnemonicPassword: mnemonicPassword,
+			Mnemonic:         mnemonic,
+			Force:            true,
 		})
 
 		check(err)

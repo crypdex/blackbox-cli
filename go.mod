@@ -4,6 +4,7 @@ require (
 	github.com/BurntSushi/toml v0.3.1 // indirect
 	github.com/alecthomas/units v0.0.0-20151022065526-2efee857e7cf // indirect
 	github.com/cenkalti/backoff v2.1.1+incompatible // indirect
+	github.com/goware/urlx v0.2.0
 	github.com/grandcat/zeroconf v0.0.0-20190118114326-c2d1b4121200
 	github.com/hashicorp/mdns v1.0.1
 	github.com/inconshreveable/mousetrap v1.0.0 // indirect

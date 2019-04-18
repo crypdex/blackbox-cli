@@ -1,10 +1,11 @@
 package blackbox
 
 type InitRequest struct {
-	Mnemonic string `json:"mnemonic"`
-	Password string `json:"password"`
-	Email    string `json:"email"`
-	Force    bool   `json:"force"`
+	Mnemonic         string `json:"mnemonic"`
+	MnemonicPassword string `json:"mnemonic_password"`
+	Password         string `json:"password"`
+	Email            string `json:"email"`
+	Force            bool   `json:"force"`
 }
 
 type InitResponse struct {
