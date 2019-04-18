@@ -8,10 +8,10 @@ import (
 
 	"github.com/logrusorgru/aurora"
 	"github.com/manifoldco/promptui"
-	"github.com/mitchellh/go-homedir"
+	homedir "github.com/mitchellh/go-homedir"
 	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
-	"gopkg.in/yaml.v2"
+	yaml "gopkg.in/yaml.v2"
 )
 
 type conf struct {
@@ -30,7 +30,7 @@ var loginCmd = &cobra.Command{
 		defer handle(&err)
 
 		prompt := promptui.Prompt{
-			Label: "password",
+			Label: "Password ",
 			Mask:  '*',
 			Validate: func(input string) error {
 				if len(input) == 0 {

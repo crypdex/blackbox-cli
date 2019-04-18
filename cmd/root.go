@@ -20,6 +20,8 @@ import (
 	"os"
 	"strings"
 
+	. "github.com/logrusorgru/aurora"
+
 	"github.com/crypdex/blackbox-cli/blackbox"
 	homedir "github.com/mitchellh/go-homedir"
 	"github.com/spf13/cobra"
@@ -107,19 +109,21 @@ func initClient() {
 	}
 
 	if host == "" {
-		fmt.Println("Defaulting to crypdex.local")
+		log("debug", "No host given, defaulting to crypdex.local")
 		host = "crypdex.local"
 	}
 
-	addrs, err := net.LookupIP("crypdex.local")
+	addrs, err := net.LookupHost(host)
 	if err != nil {
 		fatal(err)
 	}
 	for _, addr := range addrs {
-		host = "http://" + addr.To4().String()
+		if IsIPv4(addr) {
+			host = "http://" + addr
+		}
 	}
 
-	fmt.Println("Using host", host)
+	log("debug", fmt.Sprintf("Using host at %s", host))
 
 	blackboxClient, err = blackbox.NewClient(host, viper.GetString("token"), debug)
 	if err != nil {
@@ -129,4 +133,12 @@ func initClient() {
 
 func IsIPv4(address string) bool {
 	return strings.Count(address, ":") < 2
+}
+
+func log(level string, msg string) {
+	if level == "debug" && debug {
+		fmt.Println("[debug]", msg)
+	} else if level == "info" {
+		fmt.Println(Green(msg))
+	}
 }

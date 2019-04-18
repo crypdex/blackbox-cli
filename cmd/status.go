@@ -17,6 +17,7 @@ package cmd
 import (
 	"fmt"
 	"os"
+	"strconv"
 
 	"github.com/crypdex/blackbox-cli/blackbox"
 	"github.com/logrusorgru/aurora"
@@ -48,6 +49,9 @@ var statusCmd = &cobra.Command{
 }
 
 func printStatus(result *blackbox.Status) {
+	var err error
+	defer handle(&err)
+
 	var chains []string
 	locked := aurora.Green("UNLOCKED").String()
 	initialized := aurora.Red("UNINITIALIZED").String()
@@ -82,10 +86,14 @@ func printStatus(result *blackbox.Status) {
 	for key, val := range result.Blockchains {
 		if key == "pivx" {
 			status := val.(blackbox.PivxStatus)
+
+			progress, err := strconv.ParseFloat(status.SyncProgress, 64)
+			check(err)
+
 			table.AppendBulk([][]string{
 				{fmt.Sprintf("[%s] Staking Status", key), status.Blockchain.StakingStatus},
 				{fmt.Sprintf("[%s] Balance", key), fmt.Sprintf("%0.8f", status.Blockchain.Balance)},
-				{fmt.Sprintf("[%s] Sync Progress", key), status.SyncProgress},
+				{fmt.Sprintf("[%s] Sync Progress", key), fmt.Sprintf("%.4f%%", progress*100)},
 			})
 
 		}
