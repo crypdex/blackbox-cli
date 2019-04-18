@@ -2,7 +2,7 @@
 
 # Blackbox CLI
 
-A command line utility for interfacing with the devices running the **BlackboxOS**.
+A command line utility for interfacing with the devices running the **[BlackboxOS](https://github.com/crypdex/blackbox)**. This includes the [PIVX Staking Node](https://crypdex.io/products/pivx-staking-node) and the [Multichain Staking Node](https://crypdex.io/products/multichain-staking-node)
 
 ## Installation
 
@@ -45,24 +45,4 @@ Initialize your wallet with the following command.
 $ blackbox-cli init
 ```
 
-## Configuration
 
-There are some variables that you may use consistently across commands like `--chain` and `--host`. This is especially true if you are running a single chain. These variables can be saved in a config file, formatted in YAML and located at `~/.crypdex/blackbox.yaml` that will be used across commands. Flags override defaults.
-
-You may create this file manually if you'd like or use the following command:
-
-```shell
-$ blackbox config set --chain pivx --host crypdex-0000.local
-```
-
-Interested in what's in the config?
-
-```shell
-$ blackbox config get
-```
-
-... or remove it altogether
-
-```shell
-$ blackbox config rm
-```
