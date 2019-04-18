@@ -6,30 +6,43 @@ A command line utility for interfacing with the devices running the **BlackboxOS
 
 ## Installation
 
-Downloadable binaries for various platforms will be available soon. Until then, you will need to have Go installed and you can `go get` it.
+Download the most recent [release](https://github.com/crypdex/blackbox-cli/releases) for your platform. If you are running Linux, you may install via `apt`.
 
-```shell
-$ go get github.com/crypdex/blackbox-cli
+## Installation from `apt`
+
+Add the following to `/etc/apt/sources.list`
 ```
-
-If you are using modules with Go, you will want to have Go version `>= 1.12` to avoid frustration with the above command.
+deb [trusted=yes] https://apt.fury.io/crypdex/ /
+```
+And install normally
+```shell
+$ apt update && apt install
+```
 
 ## Usage
 
 Once installed and available in your `PATH`, you may run the following command
 
 ```shell
-$ blackbox
+$ blackbox-cli
 ```
 
 Which will print out the available commands, flags and usage instructions.
 
 ## Getting Started
 
-For new devices, you may want to begin by checking status.
+For new devices, you may want to begin by checking status. By default, it will look for `crypdex.local`.
 
 ```shell
-$ blackbox status --host crypdex-0000.local
+$ blackbox-cli status
+```
+
+### Initialization
+
+Initialize your wallet with the following command.
+
+```shell
+$ blackbox-cli init
 ```
 
 ## Configuration
