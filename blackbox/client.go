@@ -104,40 +104,6 @@ func (c *Client) SystemUpdate() (interface{}, error) {
 	return response, nil
 }
 
-func (c *Client) AddressList(chain string) (interface{}, error) {
-	response, err := c.client.R().Get(fmt.Sprintf("/v1/%s/addresses", chain))
-
-	if err := checkResponse(response, err); err != nil {
-		return nil, err
-	}
-
-	return response, nil
-}
-
-func (c *Client) AddressCreate(chain string, request CreateAddressRequest) (interface{}, error) {
-	response, err := c.client.R().
-		SetBody(request).
-		Post(fmt.Sprintf("/v1/%s/addresses", chain))
-
-	if err := checkResponse(response, err); err != nil {
-		return nil, err
-	}
-
-	return response, nil
-}
-
-func (c *Client) AddressRecreate(chain string, count int) (interface{}, error) {
-	response, err := c.client.R().
-		SetBody(map[string]int{"count": count}).
-		Put(fmt.Sprintf("/v1/%s/addresses", chain))
-
-	if err := checkResponse(response, err); err != nil {
-		return nil, err
-	}
-
-	return response, nil
-}
-
 func (c *Client) MasternodeList(chain string) (interface{}, error) {
 	response, err := c.client.R().Get(fmt.Sprintf("/v1/%s/masternodes", chain))
 

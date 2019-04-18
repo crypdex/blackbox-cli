@@ -25,5 +25,5 @@ var configGetCmd = &cobra.Command{
 
 func init() {
 	rootCmd.AddCommand(configCmd)
-	configCmd.AddCommand(configGetCmd)
+	// configCmd.AddCommand(configGetCmd)
 }

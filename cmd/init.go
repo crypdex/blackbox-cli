@@ -105,7 +105,7 @@ var initCmd = &cobra.Command{
 		})
 
 		if err != nil && err.Error() == "already initialized" {
-			log("warn", "This wallet has already initialized.\nYou may re-rerun this command with the -f flag to force it.")
+			log("warn", "This wallet is already initialized.\nYou may re-rerun this command with the -f flag to force it.")
 			return
 		} else {
 			check(err)

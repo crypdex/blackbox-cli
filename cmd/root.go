@@ -36,7 +36,7 @@ var blackboxClient *blackbox.Client
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
-	Use:   "blackbox",
+	Use:   "blackbox-cli",
 	Short: "A command line utility for interfacing with devices running the BlackboxOS",
 	Long:  ``,
 }

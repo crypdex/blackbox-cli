@@ -16,7 +16,12 @@ package cmd
 
 import (
 	"fmt"
+	"os"
 	"strconv"
+
+	"github.com/logrusorgru/aurora"
+
+	"github.com/olekukonko/tablewriter"
 
 	"github.com/crypdex/blackbox-cli/blackbox"
 	"github.com/pkg/errors"
@@ -38,11 +43,36 @@ var addressListCmd = &cobra.Command{
 		validateChain()
 	},
 	Run: func(cmd *cobra.Command, args []string) {
-		response, err := blackboxClient.AddressList(chain)
+		addresses, err := blackboxClient.AddressList(chain)
 		if err != nil {
 			fatal(err)
 		}
-		fmt.Println(response)
+
+		if len(addresses) == 0 {
+			log("info", fmt.Sprintf("There are no %s addresses yet", chain))
+			return
+		}
+
+		log("info", fmt.Sprintf("Found %d %s addresses", len(addresses), chain))
+
+		table := tablewriter.NewWriter(os.Stdout)
+		// table.SetBorders(tablewriter.Border{Left: false, Top: false, Right: false, Bottom: false})
+		table.SetCenterSeparator("|")
+		table.SetHeader([]string{
+			"public key", "available", "pending", "locked",
+		})
+		for _, address := range addresses {
+			table.AppendBulk([][]string{
+				{
+					aurora.Cyan(address.PublicKey).String(),
+					aurora.Green(address.Balance.Available).String(),
+					address.Balance.Pending.String(),
+					aurora.Red(address.Balance.Locked).String(),
+				},
+			})
+		}
+
+		table.Render()
 	},
 }
 
@@ -53,6 +83,7 @@ var addressCreateCmd = &cobra.Command{
 	PreRun: func(cmd *cobra.Command, args []string) {
 		validateChain()
 	},
+
 	Run: func(cmd *cobra.Command, args []string) {
 		request := new(blackbox.CreateAddressRequest)
 
@@ -66,7 +97,9 @@ var addressCreateCmd = &cobra.Command{
 		if err != nil {
 			fatal(err)
 		}
-		fmt.Println(response)
+
+		log("info", "Success. Your new address is:")
+		log("warn", response.PublicKey)
 	},
 }
 
@@ -88,7 +121,10 @@ var addressRecreateCmd = &cobra.Command{
 		if err != nil {
 			fatal(err)
 		}
-		fmt.Println(response)
+
+		log("info", fmt.Sprintf("Successfully recreated %d addresses", count))
+		log("info", "The RPC is effectively locked while this processes.")
+		log("info", response["message"])
 	},
 }
 
