@@ -3,13 +3,16 @@ package blackbox
 import (
 	"fmt"
 
+	"github.com/goware/urlx"
+
 	"github.com/logrusorgru/aurora"
 	resty "gopkg.in/resty.v1"
 )
 
 type Client struct {
-	client *resty.Client
-	debug  bool
+	client      *resty.Client
+	adminClient *resty.Client
+	debug       bool
 }
 
 // NewClient ...
@@ -37,7 +40,18 @@ func NewClient(url string, token string, debug bool) (*Client, error) {
 			return nil // if its success otherwise return error
 		})
 
-	return &Client{client: client, debug: debug}, nil
+	u, err := urlx.Parse(url)
+	if err != nil {
+		return nil, err
+	}
+
+	host, _, _ := urlx.SplitHostPort(u)
+	adminClient := resty.
+		SetHeader("Accept", "application/json").
+		SetDebug(debug).
+		SetHostURL(u.Scheme + "://" + host + ":8888")
+
+	return &Client{client: client, adminClient: adminClient, debug: debug}, nil
 }
 
 func (c *Client) Init(request InitRequest) (*InitResponse, error) {
