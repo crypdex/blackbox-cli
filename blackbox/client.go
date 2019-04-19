@@ -24,7 +24,7 @@ func NewClient(url string, token string, debug bool) (*Client, error) {
 	}
 
 	errorResponse := new(ErrorResponse)
-	client := resty.
+	client := resty.New().
 		SetDebug(debug).
 		SetHostURL(url).
 		SetHeader("Accept", "application/json").
@@ -46,7 +46,7 @@ func NewClient(url string, token string, debug bool) (*Client, error) {
 	}
 
 	host, _, _ := urlx.SplitHostPort(u)
-	adminClient := resty.
+	adminClient := resty.New().
 		SetHeader("Accept", "application/json").
 		SetDebug(debug).
 		SetHostURL(u.Scheme + "://" + host + ":8888")
