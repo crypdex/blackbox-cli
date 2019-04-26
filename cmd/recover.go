@@ -21,7 +21,7 @@ Be aware that the mnemonic is not currenly checked for validity.
 var recoverCmd = &cobra.Command{
 	Use:   "recover",
 	Short: "Recover a wallet",
-	Long:  `This command recovers a Blackbox wallet.`,
+	Long:  `This command recovers a App wallet.`,
 
 	Run: func(cmd *cobra.Command, args []string) {
 		var err error

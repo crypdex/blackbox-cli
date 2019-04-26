@@ -52,7 +52,7 @@ func init() {
 var initCmd = &cobra.Command{
 	Use:   "init",
 	Short: "Initialize the wallet",
-	Long:  `This command initializes a Blackbox including the wallet. You can force it to reinitialize with the '-f' flag.`,
+	Long:  `This command initializes a App including the wallet. You can force it to reinitialize with the '-f' flag.`,
 
 	Run: func(cmd *cobra.Command, args []string) {
 		var err error
