@@ -17,6 +17,8 @@ package cmd
 import (
 	"fmt"
 
+	"github.com/logrusorgru/aurora"
+
 	"github.com/spf13/cobra"
 )
 
@@ -36,7 +38,7 @@ var statusCmd = &cobra.Command{
 		result, err := blackboxClient.Status()
 		check(err)
 
-		fmt.Println(result)
+		fmt.Println(aurora.Green(result))
 
 	},
 }
