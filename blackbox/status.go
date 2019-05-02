@@ -1,34 +1,14 @@
 package blackbox
 
-import (
-	"github.com/mitchellh/mapstructure"
-)
+func (c *Client) Status() (interface{}, error) {
 
-type Status struct {
-	Locked      bool                   `json:"locked"`
-	Initialized bool                   `json:"initialized"`
-	Blockchains map[string]interface{} `json:"blockchains"`
-}
-
-func (c *Client) Status() (*Status, error) {
-	result := new(Status)
-	response, err := c.client.R().SetResult(result).Get("/status")
+	response, err := c.client.R().Get("/status")
 
 	if err := checkResponse(response, err); err != nil {
 		return nil, err
 	}
 
-	var pivxStatus PivxStatus
-
-	for key, val := range result.Blockchains {
-		if key == "pivx" {
-			mapstructure.Decode(val, &pivxStatus)
-
-			result.Blockchains[key] = pivxStatus
-		}
-	}
-
-	return result, nil
+	return string(response.Body()), nil
 }
 
 type PivxStatus struct {
