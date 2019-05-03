@@ -59,6 +59,7 @@ var initCmd = &cobra.Command{
 		defer handle(&err)
 
 		var password string
+		var passwordConfirm string
 		var mnemonicPassword string
 
 		var prompt promptui.Prompt
@@ -69,7 +70,6 @@ var initCmd = &cobra.Command{
 			log("warn", "Since you are forcing initialization,\nthis password must match your existing password.")
 		}
 
-		// if initPassword {
 		prompt = promptui.Prompt{
 			Label: "Password ",
 			Mask:  '*',
@@ -82,6 +82,23 @@ var initCmd = &cobra.Command{
 		password, err = prompt.Run()
 		check(err)
 
+		prompt = promptui.Prompt{
+			Label: "Re-enter Password ",
+			Mask:  '*',
+			Validate: func(input string) error {
+				if len(input) == 0 {
+					return errors.New("Password cannot be blank")
+				}
+				return nil
+			}}
+		passwordConfirm, err = prompt.Run()
+		check(err)
+
+		// Verify that the password and the confirm match please
+		if password != passwordConfirm {
+			fatal(errors.New("the passwords you gave do not match"))
+		}
+
 		if initPassword {
 			prompt = promptui.Prompt{
 				Label: "Mnemonic Password (optional) ",
@@ -90,17 +107,6 @@ var initCmd = &cobra.Command{
 			mnemonicPassword, err = prompt.Run()
 			check(err)
 		}
-
-		// }
-
-		// prompt = promptui.Prompt{Label: "email (optional)"}
-		// email, err := prompt.Run()
-		// check(err)
-		// log("info", instructions2)
-		//
-		// prompt = promptui.Prompt{Label: "mnemonic (optional)"}
-		// mnemonic, err := prompt.Run()
-		// check(err)
 
 		response, err := blackboxClient.Init(blackbox.InitRequest{
 			// Email:    email,
